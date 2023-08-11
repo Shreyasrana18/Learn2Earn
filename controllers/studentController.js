@@ -95,14 +95,11 @@ const buyItems = asyncHandler(async (req, res) => {
     if (qty > quantity) {
         res.status(400).json({ message: "Not enough quantity of item present" });
     }
-
-
     const updatedquantity = quantity - qty;
     const filter = { _id: itemID };
     const update = { $set: { itemquantity: updatedquantity } };
     const option = { new: true };
     const shoppingcart = await Shoppingcart.findByIdAndUpdate(filter, update, option);
-
 
     const transItemname = shoppingcart.itemname;
     const transItemprice = shoppingcart.itemprice;

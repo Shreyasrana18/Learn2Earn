@@ -5,7 +5,13 @@ const Quiz = require("../models/quizModel");
 const Shoppingcart = require("../models/shoppingcartModel");
 
 const schoolInformation = asyncHandler(async (req, res) => {
-    res.status(201).json({ message: "School Information" });
+    const school = await School.findById(req.params.id);
+    if (school) {
+        res.json(school);
+    } else {
+        res.status(404);
+        throw new Error("School not found");
+    }
 });
 
 const createStudent = asyncHandler(async (req, res) => {
@@ -162,5 +168,13 @@ const updateShoppingList = asyncHandler(async (req, res) => {
 
 });
 
+const getStudentList = asyncHandler(async (req, res) => {
+    try {
+        const school = await School.findById(req.params.id).populate('studentlist');
+        res.status(200).json(school.studentlist);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching student data" });
+    }
+});
 
-module.exports = { schoolInformation, createStudent, createquizzes, clearquiz, getquiz, createShoppingList,updateShoppingList,deleteShoppingList,getShoppingList, deleteShoppingItems };
+module.exports = { schoolInformation, createStudent, createquizzes, clearquiz, getquiz, createShoppingList, updateShoppingList, deleteShoppingList, getShoppingList, deleteShoppingItems, getStudentList };
